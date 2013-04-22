@@ -7,7 +7,7 @@ $username = $_SESSION['username'];
 
 if ($role != "admin") {
 	$projectName = $_SESSION['project'];
-	$projInfoQuery = "SELECT * FROM Project WHERE $projectname='".$projectName."'";
+	$projInfoQuery = "SELECT * FROM Project WHERE projectname='".$projectName."'";
 	$rst = $conn->Execute($projInfoQuery) or die($conn->errorMsg());
 	$lastAssessment = $rst->fields['lastAssessmentDate'];
 	$closed = $rst->fields['closed'];
@@ -85,16 +85,13 @@ function MM_validateForm() { //v4.0
 <div id="menu-wrapper">
   <div id="main-menu">
     <ul>
-      <li><a href="about.html">About</a></li>
-      <li><a  class="selected" href="Manager_setup.html">Project</a></li>
-      <li><a href="RiskAssessment.html">Risk Assessment</a></li>
-      <li><a href="close_voting.html">Close Voting Period</a></li>
-      <li><a href="Viewresults.html">View Results →</a></li>
+      <li><a class="selected" href="about.html">About</a></li>
+      <li><a href="jumpProject.php">Project</a></li>
+      <li><a href="jumpRiskAssessment.php">Risk Assessment</a></li>
+      <li><a href="jumpCloseVotingPeriod.php">Close Voting Period</a></li>
+      <li><a href="jumpViewResults.php">View Results</a></li>
     </ul>
   </div>
-	<!--This is the START of the footer-->
-
-	<!--END of footer-->
 </div>
 <!--END of menu-->
 <!--This is the START of the content-->
@@ -113,13 +110,13 @@ if ($role == "admin") {
 	}
 	else {
 		$projectName = $_GET['project'];
-		$projInfoQuery = "SELECT * FROM Project WHERE $projectname='".$projectName."'";
+		$projInfoQuery = "SELECT * FROM Project WHERE projectname='".$projectName."'";
 		$rst = $conn->Execute($projInfoQuery) or die($conn->errorMsg());
 		$lastAssessment = $rst->fields['lastAssessmentDate'];
 		$closed = $rst->fields['closed'];
 	}
 	echo "<select name=\"projeSelect\" style=\"margin-left: 55px;\" onchange=\"location.href=ViewResults.php?project=this.options[this.selectedIndex].value;\" >";
-	while (!rst->EOF) {
+	while (!$rst->EOF) {
 		echo "<option value=\"$rst->fields['projName']\">$rst->fields['projName']</option>";
 		$rst->movenext();
 	}
@@ -155,7 +152,7 @@ else {
 			</tr>
 		</thead>";
 	echo "<tbody>";
-	$riskResultQuery = "SELECT * FROM ProjRiskDesc WHERE $projName='".$projectName."'";
+	$riskResultQuery = "SELECT * FROM ProjRiskDesc WHERE projname='".$projectName."'";
 	$riskRst = $conn->Execute($riskResultQuery) or die($conn->errorMsg());
 	$count = 1;
 	$file = "Project Name: ".$projectName."\n";
@@ -163,7 +160,7 @@ else {
 	$file .= "Rank, Risk Item, Last RE, Last 1 RE, Avg. P(UO), Avg. L(UO), Risk Mitigation Strategy, Last Updated\n";
 	while (!$riskRst->EOF) {
 		//echo the table
-		echo "<tr><td>$count</td><td>$riskRst->fields['riskName']</td><td>$riskRst->fields['lastRE']</td><td>$riskRst->fields['lastButOneRE']</td><td>$riskRst->fields['averagePUO']</td><td>$riskRst->fields['averageLUO']</td><td>$riskRst->fields['mitigation']</td><td>$riskRst->fields['mitigationUpdateTime']</td></tr>";
+		echo "<tr><td>$count</td><td>".$riskRst->fields['riskName']."</td><td>."$riskRst->fields['lastRE']."</td><td>."$riskRst->fields['lastButOneRE']."</td><td>".$riskRst->fields['averagePUO']."</td><td>".$riskRst->fields['averageLUO']."</td><td>".$riskRst->fields['mitigation']."</td><td>".$riskRst->fields['mitigationUpdateTime']."</td></tr>";
 		//save in the file
 		$file .= $count.", ".$riskRst->fields['riskName'].", ".$riskRst->fields['lastRE'].", ".$riskRst->fields['lastButOneRE'].", ".$riskRst->fields['averagePUO'].", ".$riskRst->fields['averageLUO'].", \"".$riskRst->fields['mitigation']."\", ".$riskRst->fields['mitigationUpdateTime']."\n";
 		$riskRst->movenext();
@@ -195,11 +192,12 @@ else {
 			<h4>Login</h4>
 		</div>
 		</a>
-		<a href="about.html">
-		<div id="follow-mail"><img src="images/logout.png" />
+		<form method="post" action="logout.php">
+		<div id="follow-mail"><input type="image" src="images/logout.png" alt="Submit" name='Logout' value='Logout' />
+		<!--<div id="follow-mail"><img src="images/logout.png" /> -->
 			<h4>Logout</h4>
 		</div>
-		</a>
+		</form>
 		<h1>Thanks for that!</h1>
 	</div>
 	<!--END of follow section-->
