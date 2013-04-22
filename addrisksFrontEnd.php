@@ -153,21 +153,30 @@ function MM_validateForm() { //v4.0
   
   <div id="contact" style="float:left;text-align:center;">
   	<h5 style="margin-top:0px;">Existing Risks</h5><br>
+  	<table style="margin-left: 50px">
+		<thead>
+			<th>Risk Name</th>
+			<th>Risk Description</th>
+		</thead>
+		<tbody>
   	<?php
   		$managerName = $_SESSION['username'];	//get the name of manager, this managerName can actually be username too
 		$findProjQuery = "SELECT project FROM ProjMem WHERE member='".$managerName."'";
 		$strangeProjName = $conn->Execute($findProjQuery) or die($conn->errrorMsg()); //debug: the output is actually "project sth".
 		$projName = trim(substr($strangeProjName, 8)); //get the actual input name, trim removes all the whitespaces in the front and at the end
-		$findRiskQuery = "SELECT riskName FROM ProjRiskDesc WHERE projName='".$projName."'";
+		$findRiskQuery = "SELECT * FROM ProjRiskDesc WHERE projName='".$projName."'";
 		$rst = $conn->Execute($findRiskQuery) or die($conn->errorMsg());
 		while (!$rst->EOF) {
-			echo $rst->fields['riskName'];
-			echo "<br>";
+			echo "<tr>";
+			echo "<td>".$rst->fields['riskName']."</td>";
+			echo "<td>".$rst->fields['riskDesc']."</td>";
+			echo "</tr>";
 			$rst->movenext();
 		}
 
   	?>
-  	<div class="spacer"></div>
+  	</tbody>
+	</table>
   </div>
   <div style="clear:both;"></div>
   

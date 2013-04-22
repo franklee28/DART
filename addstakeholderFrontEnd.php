@@ -163,6 +163,12 @@ function MM_validateForm() { //v4.0
   
     <div id="contact" style="float:left;text-align:center;">
   	<h5 style="margin-top:0px;">Existing Stakeholders</h5><br>
+  	<table style="margin-left: 50px">
+		<thead>
+			<th>Role</th>
+			<th>Stakeholder Name</th>
+		</thead>
+		<tbody>
   	<?php
   		$managerName = $_SESSION['username'];	//get the name of manager, this managerName can actually be username too
 		$findProjQuery = "SELECT project FROM ProjMem WHERE member='".$managerName."'";
@@ -170,25 +176,26 @@ function MM_validateForm() { //v4.0
 		$projName = trim(substr($strangeProjName, 8)); //get the actual input name, trim removes all the whitespaces in the front and at the end
 		$findMgrQuery = "SELECT ProjMem.member AS member FROM ProjMem, Manager WHERE ProjMem.project='".$projName."' AND Manager.name=ProjMem.member";
 		$rst1 = $conn->Execute($findMgrQuery) or die($conn->errorMsg());
-		echo "Manager:<br>";
 		while (!$rst1->EOF) {
-			echo $rst1->fields['member'];
-			echo "<br>";
+			echo "<tr>";
+			echo "<td>Manager</td>";
+			echo "<td>".$rst1->fields['member']."</td>";
+			echo "</tr>";
 			$rst1->movenext();
 		}
-		echo "<br>";
 		$findUserQuery = "SELECT ProjMem.member AS member FROM ProjMem, RegularUser WHERE ProjMem.project='".$projName."' AND RegularUser.name=ProjMem.member";
 		$rst1 = $conn->Execute($findUserQuery) or die($conn->errorMsg());
-		echo "Regular User:<br>";
 		while (!$rst1->EOF) {
-			echo $rst1->fields['member'];
-			echo "<br>";
+			echo "<tr>";
+			echo "<td>Regular User</td>";
+			echo "<td>".$rst1->fields['member']."</td>";
+			echo "</tr>";
 			$rst1->movenext();
 		}
-		echo "<br>";
 
   	?>
-  	
+  	</tbody>
+	</table>	
   </div>
   <div style="clear:both;"></div>
   
