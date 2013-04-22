@@ -6,7 +6,7 @@ include_once 'include/conn.php';
 
 $role = $_SESSION['authority'];
 if ($role != "manager" && $role != "user"){
-	echo "<script language='javascript'>alert('Sorry but you have to be a manager or a regular user to add a risk.');</script>";
+	echo "<script language='javascript'>alert('Sorry but you have to be a manager or regular user to add a risk.');</script>";
 	echo "<script language='javascript'>window.location.href='setup.html';</script>";
 }
 ?>
@@ -86,8 +86,9 @@ function MM_validateForm() { //v4.0
 <div id="topcontrol" style="position: fixed; bottom: 5px; left: 960px; opacity: 1; cursor: pointer;" title="Go to Top"></div>
 <div id="header-wrapper">
   <div id="header">
+    <div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
     <div id="header-text">
-      <h4>DISTRIBUTED ASSESSMENT OF RISKS TOOL(DART)</h4>
+      <h3 style="font-family:Georgia, Times, serif; color: white">Distributed Assessment of Risks Tool(DART)</h3>
     </div>
   </div>
 </div>
@@ -96,16 +97,13 @@ function MM_validateForm() { //v4.0
 <div id="menu-wrapper">
   <div id="main-menu">
     <ul>
-      <li><a href="about.html">About</a></li>
-      <li><a  class="selected" href="setup.html">Project →</a></li>
-      <li><a href="blog.html">Risk Assessment</a></li>
-      <li><a href="contact.html">Close Voting Period</a></li>
-      <li><a href="features.html">View Results</a></li>
+      <li><a class="selected" href="about.html">About</a></li>
+      <li><a href="jumpProject.php">Project</a></li>
+      <li><a href="jumpRiskAssessment.php">Risk Assessment</a></li>
+      <li><a href="jumpCloseVotingPeriod.php">Close Voting Period</a></li>
+      <li><a href="jumpViewResults.php">View Results</a></li>
     </ul>
   </div>
-	<!--This is the START of the footer-->
-
-	<!--END of footer-->
 </div>
 <!--END of menu-->
 <!--This is the START of the content-->
@@ -122,7 +120,7 @@ function MM_validateForm() { //v4.0
       <div class="boxes">
        
         
-            <h5>Enter new risk info.</h5><br></br>
+            <h5>&diams; Enter new risk info.</h5><br></br>
         
       	<div>
        		<h6>Risk name:&nbsp</h6> <div class="box">
@@ -136,13 +134,13 @@ function MM_validateForm() { //v4.0
         	</div>
        	 
         	<div class="submitbtn">
-            <input type="submit" name='Add Risk' class="button btncolor" onclick="return check(add_risks_form);" value="Add Risk" />
+            <input type="submit" name='Add Risk' class="styled-button" onclick="return check(add_risks_form);" value="Add Risk" />
         	</div>
         </div>
         
         <div class="spacer"></div>
         
-	</div>
+		</div>
     </form>
     	
         
@@ -180,16 +178,15 @@ function MM_validateForm() { //v4.0
   </div>
   <div style="clear:both;"></div>
   
-  
 </div>
 <!--END of content-->
 <p class="slide"><a href="#" class="btn-slide"></a></p>
 <div id="slide-panel">
 	<!--This is the START of the follow section-->
 	<div id="follow">
-		<a href="TAsignin.html">
+		<a href="adminSignUp.html">
 		<div id="follow-setup"><img src="images/setup.jpg" />
-			<h4>TA Signin</h4>
+			<h4>TA Signup</h4>
 		</div>
 		</a>
 		<a href="login.html">	
@@ -197,23 +194,13 @@ function MM_validateForm() { //v4.0
 			<h4>Login</h4>
 		</div>
 		</a>
-		
 		<form method="post" action="logout.php">
 		<div id="follow-mail"><input type="image" src="images/logout.png" alt="Submit" name='Logout' value='Logout' />
 		<!--<div id="follow-mail"><img src="images/logout.png" /> -->
 			<h4>Logout</h4>
 		</div>
 		</form>
-		
-		<!--
-		<a href="about.html">
-		<div id="follow-mail"><img src="images/logout.png" />
-			<h4>Logout</h4>
-		</div>
-		</a>
-		-->
-		
-		<h1>Thanks for visiting!</h1>
+		<h1>Thanks for that!</h1>
 	</div>
 	<!--END of follow section-->
 </div>

@@ -42,7 +42,7 @@ function check(form)
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Add Stakeholder</title>
+<title>Add Stakeholders</title>
 <link rel="shortcut icon" href="favicon.ico" />
 <!-- Load CSS -->
 <link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -91,8 +91,9 @@ function MM_validateForm() { //v4.0
 <div id="topcontrol" style="position: fixed; bottom: 5px; left: 960px; opacity: 1; cursor: pointer;" title="Go to Top"></div>
 <div id="header-wrapper">
   <div id="header">
+    <div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
     <div id="header-text">
-      <h4>DISTRIBUTED ASSESSMENT OF RISKS TOOL(DART)</h4>
+      <h3 style="font-family:Georgia, Times, serif; color: white">Distributed Assessment of Risks Tool(DART)</h3>
     </div>
   </div>
 </div>
@@ -101,16 +102,13 @@ function MM_validateForm() { //v4.0
 <div id="menu-wrapper">
   <div id="main-menu">
     <ul>
-      <li><a href="about.html">About</a></li>
-      <li><a  class="selected" href="setup.html">Project →</a></li>
-      <li><a href="blog.html">Risk Assessment</a></li>
-      <li><a href="contact.html">Close Voting Period</a></li>
-      <li><a href="features.html">View Results</a></li>
+      <li><a class="selected" href="about.html">About</a></li>
+      <li><a href="jumpProject.php">Project</a></li>
+      <li><a href="jumpRiskAssessment.php">Risk Assessment</a></li>
+      <li><a href="jumpCloseVotingPeriod.php">Close Voting Period</a></li>
+      <li><a href="jumpViewResults.php">View Results</a></li>
     </ul>
   </div>
-	<!--This is the START of the footer-->
-
-	<!--END of footer-->
 </div>
 <!--END of menu-->
 <!--This is the START of the content-->
@@ -126,7 +124,7 @@ function MM_validateForm() { //v4.0
     <form method="post" action="addstakeholder.php" name="add_stakeholder_form" id="contactform">
       <div class="boxes">
             
-            <h5>Enter new stakeholder info.</h5><br></br>
+            <h5>&diams;  Enter new stakeholder info.</h5><br></br>
 
                
       	<div>
@@ -147,7 +145,7 @@ function MM_validateForm() { //v4.0
 			
 			
         	<div class="submitbtn">
-            <input type="submit" name='Add Stakeholder' class="button btncolor" onclick="return check(add_stakeholder_form);" value="Add Stakeholder" />
+            <input type="submit" name='Add Stakeholder' class="styled-button" onclick="return check(add_stakeholder_form);" value="Add Stakeholder" />
         	</div>
         </div>
         
@@ -158,6 +156,9 @@ function MM_validateForm() { //v4.0
         
 
     
+  </div>
+  <!--END of contact section-->
+  
   </div>
   <!--END of contact section-->
   
@@ -199,15 +200,16 @@ function MM_validateForm() { //v4.0
   </div>
   <div style="clear:both;"></div>
   
+  
 </div>
 <!--END of content-->
 <p class="slide"><a href="#" class="btn-slide"></a></p>
 <div id="slide-panel">
 	<!--This is the START of the follow section-->
 	<div id="follow">
-		<a href="TAsignin.html">
+		<a href="adminSignUp.html">
 		<div id="follow-setup"><img src="images/setup.jpg" />
-			<h4>TA Signin</h4>
+			<h4>TA Signup</h4>
 		</div>
 		</a>
 		<a href="login.html">	
@@ -215,23 +217,13 @@ function MM_validateForm() { //v4.0
 			<h4>Login</h4>
 		</div>
 		</a>
-		
 		<form method="post" action="logout.php">
 		<div id="follow-mail"><input type="image" src="images/logout.png" alt="Submit" name='Logout' value='Logout' />
 		<!--<div id="follow-mail"><img src="images/logout.png" /> -->
 			<h4>Logout</h4>
 		</div>
 		</form>
-		
-		<!--
-		<a href="about.html">
-		<div id="follow-mail"><img src="images/logout.png" />
-			<h4>Logout</h4>
-		</div>
-		</a>
-		-->
-		
-		<h1>Thanks for visiting!</h1>
+		<h1>Thanks for that!</h1>
 	</div>
 	<!--END of follow section-->
 </div>
