@@ -1,32 +1,16 @@
+<!--Note that this page is for user to view the project description-->
+
 <?php
+include_once 'include/conn.php';
+include_once 'managerModifyProjDescription.php';
 session_start();
-include_once "include/conn.php";
-
-$role = $_SESSION['authority'];
-$username = $_SESSION['username'];
-
-if ($role != "admin") {
-	$projectName = $_SESSION['project'];
-	$projInfoQuery = "SELECT * FROM Project WHERE projectname='".$projectName."'";
-	$rst = $conn->Execute($projInfoQuery) or die($conn->errorMsg());
-	$lastAssessment = $rst->fields['lastAssessmentDate'];
-	$closed = $rst->fields['closed'];
-}
-
-function ExportCSV() {
-	$projectName = $_SESSION['project'];
-	$username = $_SESSION['username'];
-	$filename = "csv/Results_".$username.".csv";
-	return $filename;
-}
-
 ?>
 
 <!doctype html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>View Results</title>
+<title>Manager Setup project</title>
 <link rel="shortcut icon" href="favicon.ico" />
 <!-- Load CSS -->
 <link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -75,7 +59,7 @@ function MM_validateForm() { //v4.0
 <div id="topcontrol" style="position: fixed; bottom: 5px; left: 960px; opacity: 1; cursor: pointer;" title="Go to Top"></div>
 <div id="header-wrapper">
   <div id="header">
-  	<div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
+    <div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
     <div id="header-text">
       <h3 style="font-family:Georgia, Times, serif; color: white">Distributed Assessment of Risks Tool(DART)</h3>
     </div>
@@ -97,93 +81,78 @@ function MM_validateForm() { //v4.0
 <!--END of menu-->
 <!--This is the START of the content-->
 <div id="content">
+  
+  
+  
+  
   <!--This is the START of the contact section-->
+  <div id="contact">
+  	
+  	<h5 style="margin-top:0px;">&diams; Project Profile</h5>
+    <p>Enter updates to project information below</p>
+    <?php displayProjInfo(); ?> <!--newly added: call the function to populate the variables -->
     
-<h5 style="margin-top: 40px">View Result:
-<?php
-if ($role == "admin") {
-	$query = "SELECT * FROM Project";
-	$rst = $conn->Execute($query) or die($conn->errorMsg());
-	if ($_GET['project'] == null) {
-		$projectName = $rst->fields['projectname'];
-		$lastAssessment = $rst->fields['lastAssessmentDate'];
-		$closed = $rst->fields['closed'];
-	}
-	else {
-		$projectName = $_GET['project'];
-		$projInfoQuery = "SELECT * FROM Project WHERE projectname='".$projectName."'";
-		$infoRst = $conn->Execute($projInfoQuery) or die($conn->errorMsg());
-		$lastAssessment = $infoRst->fields['lastAssessmentDate'];
-		$closed = $infoRst->fields['closed'];
-	}
-	echo "<select name=\"projeSelect\" style=\"margin-left: 55px;\" onchange=\"window.location.href='Viewresults.php?project='+this.value\" >";
-	while (!$rst->EOF) {
-		if ($projectName == $rst->fields['projectname']) {
-			echo "<option value=\"".$rst->fields['projectname']."\" selected=\"selected\" >".$rst->fields['projectname']."</option>";
-		}
-		else {
-			echo "<option value=\"".$rst->fields['projectname']."\">".$rst->fields['projectname']."</option>";
-		}
-		$rst->movenext();
-	}
-	echo "</select>";
-}
-?>
-</h5>
-<h5 style="margin-top: 40px">Project Name:<font style="margin-left: 150px; color:#660000; "><?php echo $projectName; ?></font></h5>	
-<h5 style="margin-top: 40px">Last Assessment:<font style="margin-left: 150px; color:#660000; "><?php echo $lastAssessment; ?></font><?php if ($closed != 0 ) { ?><button type="button" style="align:right;" onclick="window.location.href='<?php echo ExportCSV(); ?>'">Export CSV</button><?php } ?></h5>        
-
-<div>
-<?php
-if ($closed == 0) {
-	echo "No Closed Voting Result Yet.";
-}
-else {
-	echo "
-	<table>
-		<thead>
-			<tr>
-				<th rowspan=\"2\">Rank</th>
-				<th rowspan=\"2\">Risk Item</th>
-				<th colspan=\"2\">RE</th>
-				<th colspan=\"2\">Average</th>
-				<th rowspan=\"2\">Mitigation Strategy</th>
-				<th rowspan=\"2\">Last Updated</th>
-			</tr>
-			<tr>
-				<th>Last</th>
-				<th>Last_1</th>
-				<th>P(UO)</th>
-				<th>L(UO)</th>
-			</tr>
-		</thead>";
-	echo "<tbody>";
-	$riskResultQuery = "SELECT * FROM ProjRiskDesc WHERE projname='".$projectName."' ORDER BY lastRE DESC";
-	$riskRst = $conn->Execute($riskResultQuery) or die($conn->errorMsg());
-	$count = 1;
-	$file = "Project Name: ".$projectName."\n";
-	$file .= "Last Assessment: ".$lastAssessment."\n";
-	$file .= "Rank, Risk Item, Last RE, Last 1 RE, Avg. P(UO), Avg. L(UO), Risk Mitigation Strategy, Last Updated\n";
-	while (!$riskRst->EOF) {
-		//echo the table
-		echo "<tr><td>$count</td><td>".$riskRst->fields['riskName']."</td><td>".$riskRst->fields['lastRE']."</td><td>".$riskRst->fields['lastButOneRE']."</td><td>".$riskRst->fields['averagePUO']."</td><td>".$riskRst->fields['averageLUO']."</td><td>".$riskRst->fields['mitigation']."</td><td>".$riskRst->fields['mitigationUpdateTime']."</td></tr>";
-		//save in the file
-		$file .= $count.", ".$riskRst->fields['riskName'].", ".$riskRst->fields['lastRE'].", ".$riskRst->fields['lastButOneRE'].", ".$riskRst->fields['averagePUO'].", ".$riskRst->fields['averageLUO'].", ".$riskRst->fields['mitigation'].", ".$riskRst->fields['mitigationUpdateTime']."\n";
-		$riskRst->movenext();
-		$count++;
-	}
-	echo "</tbody>";
-	echo "</table>";
-	$filename = "./csv/Results_".$username.".csv";
-	file_put_contents($filename, $file, LOCK_EX);
-}
-?>
-</div>  
-
-
-    
+    <form method="post" action="user_setup.html" name="setup_form" id="contactform">
+      	<div class="boxes">
+        	<h5>Project name:</h5><br></br>
+        	<div class="box">
+          <!--<input name="projectname" type="text" class="input" id="sender_name" title="Projname" value="" maxlength="2048"/></div>-->
+				<?php echo $projName; ?>
+			</div>
+			
+        	<h5>Project description:</h5><br></br>
+        	<div class="msgbox">
+         	 <?php
+          	echo $projDesc;
+          	?>
+        <!--size="30"-->
+        	</div>
+        
+        	<div class="submitbtn">
+          		<input type="submit" name='Update' class="styled-button" onclick="return check(setup_form);" value="Go Back" />
+        	</div>
+   	     </div> 
+   	</form> 
   </div>
-  <!--END of contact section--> 
+    
+    
+    <div id="contactinfo" style="width:300px; margin-left: 2px">    
+        <h5>Stakeholder:</h5><br/>
+        <div>
+        	<table style="margin-left: 50px">
+				<thead>
+					<th>Role</th>
+					<th>Stakeholder Name</th>
+				</thead>
+				<tbody>
+				<?php
+				$findMgrQuery = "SELECT ProjMem.member AS member FROM ProjMem, Manager WHERE ProjMem.project='".$projName."' AND Manager.name=ProjMem.member";
+				$rst1 = $conn->Execute($findMgrQuery) or die($conn->errorMsg());
+				while (!$rst1->EOF) {
+					echo "<tr>";
+					echo "<td>Manager</td>";
+					echo "<td>".$rst1->fields['member']."</td>";
+					echo "</tr>";
+					$rst1->movenext();
+				}
+				$findUserQuery = "SELECT ProjMem.member AS member FROM ProjMem, RegularUser WHERE ProjMem.project='".$projName."' AND RegularUser.name=ProjMem.member";
+				$rst1 = $conn->Execute($findUserQuery) or die($conn->errorMsg());
+				while (!$rst1->EOF) {
+					echo "<tr>";
+					echo "<td>Regular User</td>";
+					echo "<td>".$rst1->fields['member']."</td>";
+					echo "</tr>";
+					$rst1->movenext();
+				}
+				?>
+				</tbody>
+			</table>	
+		</div>
+    </div>
+
+    <!--END of contact section-->
+  
+  
 </div>
 <!--END of content-->
 <p class="slide"><a href="#" class="btn-slide"></a></p>
@@ -200,7 +169,7 @@ else {
 			<h4>Login</h4>
 		</div>
 		</a>
-		<form method="post" action="logout.php">
+	<form method="post" action="logout.php">
 		<div id="follow-mail"><input type="image" src="images/logout.png" alt="Submit" name='Logout' value='Logout' />
 		<!--<div id="follow-mail"><img src="images/logout.png" /> -->
 			<h4>Logout</h4>

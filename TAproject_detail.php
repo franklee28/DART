@@ -1,43 +1,27 @@
 <?php
-session_start();
+//This action happens after manager or regular users clicks on "Risk Assessment" in the navigation bar on the left.
+//This file can be integrated with html to generate ballot table! (maybe this file is included in html file??)
+//The authority will be checked immediately.
+
 include_once 'include/conn.php';
+session_start();
 
-//verify that only manager can access this feature
+//$username = $_SESSION['username'];
+//$sql = "SELECT * FROM ProjMem WHERE member='".$username."'";
+//$rst = $conn->execute($sql);
+//$projName = $rst->fields['project'];
 
-$role = $_SESSION['authority'];
-if ($role != "manager" && $role != "user"){
-	echo "<script language='javascript'>alert('Sorry but you have to be a manager or regular user to add a risk.');</script>";
-	echo "<script language='javascript'>window.location.href='setup.html';</script>";
-}
+$selectAllProj = "SELECT * FROM Project";
+$selectAllProjRST = $conn->execute($selectAllProj);
+$numberofrow = $selectAllProjRST->RecordCount();
+
 ?>
-
-
-<script language="javascript">
-/*Function:focus on the blank and alert the user to input the necessaries.
-*/
-function check(form)
-{
-	if(form.riskName.value=="")
-	{
-		alert("Please input the risk name");
-		form.riskName.focus();
-		return false;
-	}
-	if(form.riskDesc.value=="")
-	{
-		alert("Please input the risk description");
-		form.riskDesc.focus();
-		return false;
-	}
-	form.submit();
-}
-</script>
 
 <!doctype html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Add Risks</title>
+<title>TA review the project detail</title>
 <link rel="shortcut icon" href="favicon.ico" />
 <!-- Load CSS -->
 <link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -86,7 +70,7 @@ function MM_validateForm() { //v4.0
 <div id="topcontrol" style="position: fixed; bottom: 5px; left: 960px; opacity: 1; cursor: pointer;" title="Go to Top"></div>
 <div id="header-wrapper">
   <div id="header">
-    <div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
+  	<div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
     <div id="header-text">
       <h3 style="font-family:Georgia, Times, serif; color: white">Distributed Assessment of Risks Tool(DART)</h3>
     </div>
@@ -107,75 +91,91 @@ function MM_validateForm() { //v4.0
 </div>
 <!--END of menu-->
 <!--This is the START of the content-->
-<div id="content" style="width:1200px">
+<div id="content">
   
-
   <!--This is the START of the contact section-->
-  <div id="contact" style="float:left;">
-    <h5 style="margin-top:0px;">Add Risks</h5>
-   
-    <form method="post" action="addRisks.php" name="add_risks_form" id="contactform">
-      <div class="boxes">
-       
-        
-            <h5>&diams; Enter new risk info.</h5><br></br>
-        
-      	<div>
-       		<h6>Risk name:&nbsp</h6> <div class="box">
-       	   	<input name="riskName" type="text"  class="input" id="sender_name" title="riskname" value="" maxlength="2048"/></div>
+  <div id="contact">
+    <h5 style="margin-top:0px;">&diams; Display Project Information</h5><br></br>
+	
+	<div class="submitbtn">
+		<input type="submit" name='+ Add new' class="styled-button" value="+ Add New" onclick="window.location.href='adminSetUpProj.html';"/>
+    </div>           
 
-			
-			<h6>Risk Description:</h6>
-       		 <div class="msgbox">
-        	  <textarea name="riskDesc" class="message" id="cf_message" title="riskDescription" value="" rows="50" cols="30" maxlength="2048"></textarea>
-       	 	<!--size="30"-->
-        	</div>
-       	 
-        	<div class="submitbtn">
-            <input type="submit" name='Add Risk' class="styled-button" onclick="return check(add_risks_form);" value="Add Risk" />
-        	</div>
-        </div>
-        
-        <div class="spacer"></div>
-        
-		</div>
-    </form>
-    	
-        
 
-    
-  </div>
-  <!--END of contact section-->
-  
-  <div id="contact" style="float:left;text-align:center;">
-  	<h5 style="margin-top:0px;">Existing Risks</h5><br>
-  	<table style="margin-left: 50px">
+	<table>
 		<thead>
-			<th>Risk Name</th>
-			<th>Risk Description</th>
+			<th>ID</th>
+			<th>Project Name</th>
+			<th>Project Description</th>
 		</thead>
 		<tbody>
-  	<?php
-  		$managerName = $_SESSION['username'];	//get the name of manager, this managerName can actually be username too
-		$findProjQuery = "SELECT project FROM ProjMem WHERE member='".$managerName."'";
-		$strangeProjName = $conn->Execute($findProjQuery) or die($conn->errrorMsg()); //debug: the output is actually "project sth".
-		$projName = trim(substr($strangeProjName, 8)); //get the actual input name, trim removes all the whitespaces in the front and at the end
-		$findRiskQuery = "SELECT * FROM ProjRiskDesc WHERE projName='".$projName."'";
-		$rst = $conn->Execute($findRiskQuery) or die($conn->errorMsg());
-		while (!$rst->EOF) {
-			echo "<tr>";
-			echo "<td>".$rst->fields['riskName']."</td>";
-			echo "<td>".$rst->fields['riskDesc']."</td>";
-			echo "</tr>";
-			$rst->movenext();
-		}
-
-  	?>
-  	</tbody>
+			<?php for($counter = 1;$counter<=$numberofrow;$counter++){ ?>
+			<tr>
+				<td><?php echo $counter; ?></td>
+				<?php $projectName = $selectAllProjRST->fields['projectname']; ?>
+				<td><?php echo $projectName; ?></td>
+				<?php $projectDesc = $selectAllProjRST->fields['projectdesc']; ?>
+				<td> <?php echo $projectDesc."<a href=\"TAproject_detail.php?project=".$projectName."\">...more info</a>"; ?></td>
+			</tr>
+					
+			<?php $selectAllProjRST->movenext(); } ?>
+		</tbody>
 	</table>
+	
   </div>
-  <div style="clear:both;"></div>
   
+  	<?php $aProjName = $_GET['project'];
+
+	$getProjSQL = "SELECT * FROM Project WHERE projectname='$aProjName'";	//this returns many rows since many stakeholders.
+	$getProjRST = $conn->execute($getProjSQL);
+	$projDESC = $getProjRST->fields['projectdesc'];
+	//$numberofstakeholder = $sameRiskRST->RecordCount();
+
+	$getMemSQL = "SELECT * FROM ProjMem WHERE project='$aProjName'";
+	$getMemRST = $conn->execute($getMemSQL);
+	
+	?>
+  
+  
+  <div id="contactinfo" style="width:300px; margin-left: 2px">
+    <h5>&diams; Detailed information:</h5><br />
+    <h5 style="color:#B22222">Project name:</h5>
+    <p><?php echo $aProjName; ?></p>
+    <h5 style="color:#B22222">Project description:</h5>
+    <p><?php echo $projDESC; ?></p>
+    
+    <br/>
+    <h5 style="color:#B22222">Stakeholder</h5>
+    		<table style="margin-left: 50px">
+				<thead>
+					<th>Role</th>
+					<th>Stakeholder Name</th>
+				</thead>
+				<tbody>
+				<?php
+				$findMgrQuery = "SELECT ProjMem.member AS member FROM ProjMem, Manager WHERE ProjMem.project='".$aProjName."' AND Manager.name=ProjMem.member";
+				$rst1 = $conn->Execute($findMgrQuery) or die($conn->errorMsg());
+				while (!$rst1->EOF) {
+					echo "<tr>";
+					echo "<td>Manager</td>";
+					echo "<td>".$rst1->fields['member']."</td>";
+					echo "</tr>";
+					$rst1->movenext();
+				}
+				$findUserQuery = "SELECT ProjMem.member AS member FROM ProjMem, RegularUser WHERE ProjMem.project='".$aProjName."' AND RegularUser.name=ProjMem.member";
+				$rst1 = $conn->Execute($findUserQuery) or die($conn->errorMsg());
+				while (!$rst1->EOF) {
+					echo "<tr>";
+					echo "<td>Regular User</td>";
+					echo "<td>".$rst1->fields['member']."</td>";
+					echo "</tr>";
+					$rst1->movenext();
+				}
+				?>
+				</tbody>
+			</table>	
+   </div>
+  <!--END of contact section--> 
 </div>
 <!--END of content-->
 <p class="slide"><a href="#" class="btn-slide"></a></p>

@@ -18,10 +18,11 @@ if($rst->RecordCount() == 1)
 {
 	$_SESSION['username'] = $username;
     $_SESSION['authority'] = "admin";
-	header("location:adminSetUpProj.html");	//sign in successfully, go to proj set up page
+	header("location:TA_setup.html");	//sign in successfully, go to proj set up page
 }
 else
 {
 	echo "<script language='javascript'>alert('Incorrect Username OR Password!');</script>";
 	echo "<script language='javascript'>window.location.href='adminSignUp.html';</script>";	//incorrect info entered, go back to sign in page
 }
+?>

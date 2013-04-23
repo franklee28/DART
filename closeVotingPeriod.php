@@ -13,8 +13,7 @@ if ($role != "manager"){
 	echo "<script language='javascript'>window.location.href='setup.html';</script>";	//debug: go where??
 }
 
-$managerName = $_SESSION['username'];	//get the name of manager, this managerName can actually be username too
-//$sql = "select * from RegularUser where name='".$username."' and pwd='".$pwdmd5."'";
+$managerName = $_SESSION['username'];
 $sql = "SELECT * FROM ProjMem WHERE member='".$managerName."'";
 $rst = $conn->execute($sql);
 $projName = $rst->fields['project'];
@@ -23,6 +22,10 @@ $projName = $rst->fields['project'];
 $lastAssessmentDate = date("Y-m-d");
 $updateAssessDateSQL = "UPDATE Project SET lastAssessmentDate = '$lastAssessmentDate' WHERE projectname='$projName'";		//debug: check the type of closed. update the last assessment date and close the voting session
 $updateAssessDateRST = $conn->execute($updateAssessDateSQL);
+
+//-------update closed-------------------
+$updateClosedSQL = "UPDATE Project SET closed = '1' WHERE projectname='$projName'";		//debug: check the type of closed. update the last assessment date and close the voting session
+$updateClosedRST = $conn->execute($updateClosedSQL);
 
 //-------UPDATE the info in ProjRiskDesc, do calculations here-----------
 $sql1 = "select * from ProjRiskDesc";	//get all the rows in ProjRiskDesc, where (projName, riskName) is unique.
@@ -53,18 +56,31 @@ while (!$rst1->EOF) {	//for every row in ProjRiskDesc
 		$LUOsum = $LUOsum + $LUO;
 		$lastREsum = $lastREsum + $PUO * $LUO;
 		
-		$counter = $counter + 1;
+		if ($PUO != 0 && $LUO != 0){	//not counting those who astains voting on a risk item or those who has not voted yet.
+			$counter = $counter + 1;	
+		}
+		
 		$rst2->movenext();
 	}
 	
-	$averagePUO = $PUOsum / $counter;
-	$averageLUO = $LUOsum / $counter;
-	$averageLastRE = $lastREsum / $counter;
+	if ($counter != 0){
+		$averagePUO = $PUOsum / $counter;
+		$averageLUO = $LUOsum / $counter;
+		$averageLastRE = $lastREsum / $counter;
+	}
+	else {
+		$averagePUO = 0;
+		$averageLUO = 0;
+		$averageLastRE = 0;		
+	}
 	
 	$sql3 = "UPDATE ProjRiskDesc SET lastRE='$averageLastRE', averagePUO='$averagePUO', averageLUO='$averageLUO' WHERE projName='$projName' AND riskName='$riskName'";
 	$updateProjRiskDesc = $conn->execute($sql3);	//update for a particular (projName, riskName) in ProjRiskDesc
 	
 	$rst1->movenext();	//move on to the next (projName, riskName) in ProjRiskDesc
 }
+
+	echo "<script>alert('Voting session closed. Now you can click on View Results to see the voting result.');</script>";
+	echo "<script language='javascript'>window.location.href='about.html';</script>";	//debug: go where??
 
 ?>

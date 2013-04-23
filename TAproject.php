@@ -1,8 +1,26 @@
+<?php
+//This action happens after manager or regular users clicks on "Risk Assessment" in the navigation bar on the left.
+//This file can be integrated with html to generate ballot table! (maybe this file is included in html file??)
+//The authority will be checked immediately.
+
+include_once 'include/conn.php';
+session_start();
+
+//$username = $_SESSION['username'];
+//$sql = "SELECT * FROM ProjMem WHERE member='".$username."'";
+//$rst = $conn->execute($sql);
+//$projName = $rst->fields['project'];
+
+$selectAllProj = "SELECT * FROM Project";
+$selectAllProjRST = $conn->execute($selectAllProj);
+$numberofrow = $selectAllProjRST->RecordCount();
+?>
+
 <!doctype html>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>About DART</title>
+<title>TA review the project</title>
 <link rel="shortcut icon" href="favicon.ico" />
 <!-- Load CSS -->
 <link href="css/style.css" rel="stylesheet" type="text/css" />
@@ -26,13 +44,32 @@
 <script type="text/javascript" src="scripts/jquery.easing-1.3.pack.js"></script>
 <script type="text/javascript" src="scripts/jquery.mousewheel-3.0.4.pack.js"></script>
 <link rel="stylesheet" href="css/jquery.fancybox-1.3.4.css" type="text/css" media="screen" />
+<!-- Load contact check -->
+<script type="text/javascript">
+function MM_validateForm() { //v4.0
+  if (document.getElementById){
+    var i,p,q,nm,test,num,min,max,errors='',args=MM_validateForm.arguments;
+    for (i=0; i<(args.length-2); i+=3) { test=args[i+2]; val=document.getElementById(args[i]);
+      if (val) { nm=val.name; if ((val=val.value)!="") {
+        if (test.indexOf('isEmail')!=-1) { p=val.indexOf('@');
+          if (p<1 || p==(val.length-1)) errors+='- '+nm+' must contain an e-mail address.\n';
+        } else if (test!='R') { num = parseFloat(val);
+          if (isNaN(val)) errors+='- '+nm+' must contain a number.\n';
+          if (test.indexOf('inRange') != -1) { p=test.indexOf(':');
+            min=test.substring(8,p); max=test.substring(p+1);
+            if (num<min || max<num) errors+='- '+nm+' must contain a number between '+min+' and '+max+'.\n';
+      } } } else if (test.charAt(0) == 'R') errors += '- '+nm+' is required.\n'; }
+    } if (errors) alert('We are sorry, but there is an error:\n'+errors);
+    document.MM_returnValue = (errors == '');
+} }
+</script>
 </head>
 <body>
 <!--This is the START of the header-->
 <div id="topcontrol" style="position: fixed; bottom: 5px; left: 960px; opacity: 1; cursor: pointer;" title="Go to Top"></div>
 <div id="header-wrapper">
   <div id="header">
-    <div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
+  	<div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
     <div id="header-text">
       <h3 style="font-family:Georgia, Times, serif; color: white">Distributed Assessment of Risks Tool(DART)</h3>
     </div>
@@ -43,7 +80,7 @@
 <div id="menu-wrapper">
   <div id="main-menu">
     <ul>
-      <li><a class="selected" href="about.html">About →</a></li>
+      <li><a class="selected" href="about.html">About</a></li>
       <li><a href="jumpProject.php">Project</a></li>
       <li><a href="jumpRiskAssessment.php">Risk Assessment</a></li>
       <li><a href="jumpCloseVotingPeriod.php">Close Voting Period</a></li>
@@ -51,20 +88,44 @@
     </ul>
   </div>
 </div>
-
 <!--END of menu-->
 <!--This is the START of the content-->
 <div id="content">
-  <div class="about">
-  	 <a class="single_image" href="images/blog/large/blog1.jpg"><img src="images/blog/single/blog1.jpg" width="720" height="280" alt="blog1" /></a>
-    <h5>Why people need DART?</h5>
-    <p>It is often necessary for a group of possibly non co-located stakeholders to collaboratively assess and ultimately prioritize project risks. Unfortunately, with worsens sharply with increasing numbers of stakeholders, risk assessment becomes nearly impossible when stakeholders are not all in the same place at the same time. The Distributed Assessment of Risks Tool (DART) is a means to aid risk assessment efforts by providing a web based interface for gathering stakeholder assessments, aggregate results, generate a top-n risk list, and track reassessments.</p>
-	  <div class="spacer"></div>
-    <h5>Purpose of DART:</h5>
-    <p>DART is used to provide a means to address these issues with respect to project risk assessment and tracking. The tool provides an easy to use interface for project stakeholders to continuously perform and monitor top-n risk assessments. This includes acquiring risk exposure estimates for distributed stakeholders, reporting current risk assessments and priorities, gathering risk mitigation and impact information, and graphing risk exposure changes. The information can be easily exported and imported to external tools such as Excel and text based CSV format.</p>
-	 
+  
+  
+  
+  
+  <!--This is the START of the contact section-->
+  <div id="contact">
+    <h5 style="margin-top:0px;">&diams; Display Project Information</h5><br></br>
+	
+	<div class="submitbtn">
+		<input type="submit" name='+ Add new' class="styled-button" value="+ Add New" onclick="window.location.href='adminSetUpProj.html';"/>
+    </div>
+	
+<div>
+	<table>
+		<thead>
+			<th>ID</th>
+			<th>Project Name</th>
+			<th>Project Description</th>
+		</thead>
+		<tbody>
+			<?php for($counter = 1;$counter<=$numberofrow;$counter++){ ?>
+			<tr>
+				<td><?php echo $counter; ?></td>
+				<?php $projectName = $selectAllProjRST->fields['projectname']; ?>
+				<td><?php echo $projectName; ?></td>
+				<?php $projectDesc = $selectAllProjRST->fields['projectdesc']; ?>
+				<td> <?php echo $projectDesc."<a href=\"TAproject_detail.php?project=".$projectName."\">...more info</a>"; ?></td>
+			</tr>
+					
+			<?php $selectAllProjRST->movenext(); } ?>
+		</tbody>
+	</table>
+</div>  
   </div>
-  <div class="spacer"></div>
+  <!--END of contact section--> 
 </div>
 <!--END of content-->
 <p class="slide"><a href="#" class="btn-slide"></a></p>
