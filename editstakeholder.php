@@ -114,8 +114,9 @@ function MM_validateForm() { //v4.0
 <div id="topcontrol" style="position: fixed; bottom: 5px; left: 960px; opacity: 1; cursor: pointer;" title="Go to Top"></div>
 <div id="header-wrapper">
   <div id="header">
+    <div id="logo"><img src="images/usc.png" width="140" alt="logo" /></div>
     <div id="header-text">
-      <h4>DISTRIBUTED ASSESSMENT OF RISKS TOOL(DART)</h4>
+      <h3 style="font-family:Georgia, Times, serif; color: white">Distributed Assessment of Risks Tool(DART)</h3>
     </div>
   </div>
 </div>
@@ -124,32 +125,29 @@ function MM_validateForm() { //v4.0
 <div id="menu-wrapper">
   <div id="main-menu">
     <ul>
-      <li><a href="about.html">About</a></li>
-      <li><a  class="selected" href="setup.html">Project →</a></li>
-      <li><a href="blog.html">Risk Assessment</a></li>
-      <li><a href="contact.html">Close Voting Period</a></li>
-      <li><a href="features.html">View Results</a></li>
+      <li><a class="selected" href="about.html">About</a></li>
+      <li><a href="jumpProject.php">Project</a></li>
+      <li><a href="jumpRiskAssessment.php">Risk Assessment</a></li>
+      <li><a href="jumpCloseVotingPeriod.php">Close Voting Period</a></li>
+      <li><a href="jumpViewResults.php">View Results</a></li>
     </ul>
   </div>
-	<!--This is the START of the footer-->
-
-	<!--END of footer-->
 </div>
 <!--END of menu-->
 <!--This is the START of the content-->
-<div id="content">
+<div id="content" style="width:1200px">
   
   
   
   
 <!--This is the START of the contact section-->
-<div id="contact">
+<div id="contact" style="float:left;">
 	<h5 style="margin-top:0px;">Edit Stakeholder</h5>
 	
     <form method="post" action="deletestakeholder.php" name="delete_stakeholder_form" id="contactform">
 		<div class="boxes">
             
-			<h5>Select a stakeholder to delete.</h5><br></br>
+			<h5>&diams; Select a stakeholder to delete.</h5><br></br>
         
 			<div>
 				<h6>Stakeholder:&nbsp </h6>
@@ -158,7 +156,7 @@ function MM_validateForm() { //v4.0
 				?>
 
 				<div class="submitbtn">
-				<input type="submit" name='Delete Stakeholder' class="button btncolor" onclick="return check_selection(delete_stakeholder_form);" value="Delete Stakeholder" />
+				<input type="submit" name='Delete Stakeholder' class="styled-button" onclick="return check_selection(delete_stakeholder_form);" value="Delete Stakeholder" />
 				</div>
 			</div>
 		</div>
@@ -167,7 +165,7 @@ function MM_validateForm() { //v4.0
 	<form method="post" action="editstakeholderinfo.php" name="edit_stakeholder_form" id="contactform">
         <div class="spacer">
 		
-			<h5>Change stakeholder info below.</h5><br></br>
+			<h5>&diams; Change stakeholder info below.</h5><br></br>
         
 			<div>
 				<h6>Name:&nbsp </h6>
@@ -180,7 +178,7 @@ function MM_validateForm() { //v4.0
 				<input name="pwd" type="password"  class="input" id="sender_pw" title="Pw" value="" maxlength="2048"/></div>
 
 				<div class="submitbtn">
-				<input type="submit" name='Edit Stakeholder' class="button btncolor" onclick="return check(edit_stakeholder_form);" value="Edit Stakeholder" />
+				<input type="submit" name='Edit Stakeholder' class="styled-button" onclick="return check(edit_stakeholder_form);" value="Edit Stakeholder" />
 				</div>
 			</div>
 		</div>
@@ -188,6 +186,45 @@ function MM_validateForm() { //v4.0
     </form>
 </div>
 <!--END of contact section-->
+
+
+<div id="contact" style="float:left;text-align:center;">
+  	<h5 style="margin-top:0px;">Existing Stakeholders</h5><br>
+  	<table style="margin-left: 50px">
+		<thead>
+			<th>Role</th>
+			<th>Stakeholder Name</th>
+		</thead>
+		<tbody>
+  	<?php
+  		$managerName = $_SESSION['username'];	//get the name of manager, this managerName can actually be username too
+		$findProjQuery = "SELECT project FROM ProjMem WHERE member='".$managerName."'";
+		$strangeProjName = $conn->Execute($findProjQuery) or die($conn->errrorMsg()); //debug: the output is actually "project sth".
+		$projName = trim(substr($strangeProjName, 8)); //get the actual input name, trim removes all the whitespaces in the front and at the end
+		$findMgrQuery = "SELECT ProjMem.member AS member FROM ProjMem, Manager WHERE ProjMem.project='".$projName."' AND Manager.name=ProjMem.member";
+		$rst1 = $conn->Execute($findMgrQuery) or die($conn->errorMsg());
+		while (!$rst1->EOF) {
+			echo "<tr>";
+			echo "<td>Manager</td>";
+			echo "<td>".$rst1->fields['member']."</td>";
+			echo "</tr>";
+			$rst1->movenext();
+		}
+		$findUserQuery = "SELECT ProjMem.member AS member FROM ProjMem, RegularUser WHERE ProjMem.project='".$projName."' AND RegularUser.name=ProjMem.member";
+		$rst1 = $conn->Execute($findUserQuery) or die($conn->errorMsg());
+		while (!$rst1->EOF) {
+			echo "<tr>";
+			echo "<td>Regular User</td>";
+			echo "<td>".$rst1->fields['member']."</td>";
+			echo "</tr>";
+			$rst1->movenext();
+		}
+
+  	?>
+  	</tbody>
+	</table>	
+  </div>
+  <div style="clear:both;"></div>
   
   
 </div>
@@ -196,9 +233,9 @@ function MM_validateForm() { //v4.0
 <div id="slide-panel">
 	<!--This is the START of the follow section-->
 	<div id="follow">
-		<a href="TAsignin.html">
+		<a href="adminSignUp.html">
 		<div id="follow-setup"><img src="images/setup.jpg" />
-			<h4>TA Signin</h4>
+			<h4>TA Signup</h4>
 		</div>
 		</a>
 		<a href="login.html">	
@@ -206,23 +243,13 @@ function MM_validateForm() { //v4.0
 			<h4>Login</h4>
 		</div>
 		</a>
-		
 		<form method="post" action="logout.php">
 		<div id="follow-mail"><input type="image" src="images/logout.png" alt="Submit" name='Logout' value='Logout' />
 		<!--<div id="follow-mail"><img src="images/logout.png" /> -->
 			<h4>Logout</h4>
 		</div>
 		</form>
-		
-		<!--
-		<a href="about.html">
-		<div id="follow-mail"><img src="images/logout.png" />
-			<h4>Logout</h4>
-		</div>
-		</a>
-		-->		
-		
-		<h1>Thanks for visiting!</h1>
+		<h1>Thanks for that!</h1>
 	</div>
 	<!--END of follow section-->
 </div>

@@ -108,10 +108,14 @@ function MM_validateForm() { //v4.0
 <!--END of menu-->
 <!--This is the START of the content-->
 <div id="content" style="width:1200px">
+<<<<<<< HEAD
   
   
   
+=======
+>>>>>>> upstream/master
   
+
   <!--This is the START of the contact section-->
   <div id="contact" style="float:left;">
     <h5 style="margin-top:0px;">Add Risks</h5>
