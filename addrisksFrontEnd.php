@@ -108,16 +108,6 @@ function MM_validateForm() { //v4.0
 <!--END of menu-->
 <!--This is the START of the content-->
 <div id="content" style="width:1200px">
-<<<<<<< HEAD
-<<<<<<< HEAD
-  
-  
-  
-=======
->>>>>>> upstream/master
-=======
->>>>>>> 005d37edd6f537319e3b352ed88c5cea45654a17
-  
 
   <!--This is the START of the contact section-->
   <div id="contact" style="float:left;">

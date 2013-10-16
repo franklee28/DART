@@ -109,16 +109,13 @@ function MM_validateForm() { //v4.0
   
   <!--This is the START of the contact section-->
   <div id="contact">
-  	
-<<<<<<< HEAD
-<<<<<<< HEAD
+
   	<h5 style="margin-top:0px;">&diams; Project Setup</h5>
-=======
+
   	<h5 style="margin-top:0px;">&diams; Project Profile</h5>
->>>>>>> upstream/master
-=======
+
   	<h5 style="margin-top:0px;">&diams; Project Profile</h5>
->>>>>>> 005d37edd6f537319e3b352ed88c5cea45654a17
+
     <p>Enter updates to project information below</p>
     <?php displayProjInfo(); ?> <!--newly added: call the function to populate the variables -->
     
@@ -133,15 +130,10 @@ function MM_validateForm() { //v4.0
         	<h5>Project description:</h5>
         	<div class="msgbox">
          	 <?php
-<<<<<<< HEAD
-<<<<<<< HEAD
+
           	echo '<textarea name="projectdesc" class="message" id="cf_message" title="Description" value="" rows="50" cols="30" maxlength="2048">'.$projDesc.'</textarea>';
-=======
           	echo '<textarea name="projectdesc" class="message" id="cf_message" title="Description" value="" rows="50" cols="30" maxlength="4096">'.$projDesc.'</textarea>';
->>>>>>> upstream/master
-=======
           	echo '<textarea name="projectdesc" class="message" id="cf_message" title="Description" value="" rows="50" cols="30" maxlength="4096">'.$projDesc.'</textarea>';
->>>>>>> 005d37edd6f537319e3b352ed88c5cea45654a17
           	?>
         <!--size="30"-->
         	</div>
